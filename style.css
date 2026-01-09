@@ -1,3 +1,18 @@
+/* CSS Variables */
+:root {
+    --primary-color: #e91e63;
+    --secondary-color: #ff6b6b;
+    --light-pink: #f5a9af;
+    --light-blue: #a6c1ee;
+    --light-bg: #fbc2eb;
+    --text-dark: #5a5a5a;
+    --border-radius: 20px;
+    --transition-speed: 0.3s;
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.12);
+    --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.15);
+}
+
 /* Reset & Umum */
 * {
     margin: 0;
@@ -7,24 +22,35 @@
 
 body {
     font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg, #fbc2eb, #a6c1ee);
+    background: linear-gradient(135deg, var(--light-bg), var(--light-blue));
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
     overflow: hidden;
     position: relative;
-    color: #5a5a5a;
+    color: var(--text-dark);
+    scroll-behavior: smooth;
 }
 
 /* Efek Hati Mengambang */
+.floating-hearts {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: -1;
+}
+
 .floating-hearts span {
     position: absolute;
     font-size: 1.8rem;
-    animation: floatUp linear infinite;
+    animation: floatUp 8s linear infinite;
     opacity: 0.7;
-    z-index: -1;
     pointer-events: none;
+    animation-delay: var(--delay, 0s);
+    left: calc(var(--i) * 10%);
+    will-change: transform;
+    backface-visibility: hidden;
 }
 
 @keyframes floatUp {
@@ -44,28 +70,39 @@ body {
     }
 }
 
+/* Container */
 .container {
     perspective: 1000px;
     z-index: 10;
+    width: 100%;
+    max-width: 700px;
+    padding: 20px;
 }
 
+/* Envelope/Letter Card */
 .envelope {
-    width: 90%;
-    max-width: 600px;
+    width: 100%;
     background: rgba(255, 255, 255, 0.85);
     padding: 40px;
-    border-radius: 20px;
+    border-radius: var(--border-radius);
     box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
     position: relative;
     animation: float 4s ease-in-out infinite;
     backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.4);
     transition: transform 0.4s ease, box-shadow 0.4s ease;
+    will-change: transform, box-shadow;
 }
 
-.envelope:hover {
+.envelope:hover:not(.opened) {
     transform: translateY(-10px) scale(1.02);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    box-shadow: var(--shadow-lg);
+    cursor: pointer;
+}
+
+.envelope.opened {
+    animation: openEnvelope 0.8s ease-out forwards;
+    pointer-events: none;
 }
 
 @keyframes float {
@@ -73,17 +110,36 @@ body {
     50% { transform: translateY(-15px); }
 }
 
+@keyframes openEnvelope {
+    0% {
+        transform: rotateX(0) scale(1) rotateZ(0deg);
+        opacity: 1;
+    }
+    25% {
+        transform: rotateX(-10deg) scale(1.02) rotateZ(2deg);
+    }
+    50% {
+        transform: rotateX(-25deg) scale(0.98) rotateZ(-1deg);
+    }
+    100% {
+        transform: rotateX(-35deg) scale(0.85) rotateZ(0deg);
+        opacity: 0.7;
+    }
+}
+
+/* Heart Icon */
 .heart {
     position: absolute;
     top: 20px;
     right: 20px;
     width: 45px;
     height: 45px;
-    background-color: #ff6b6b;
+    background-color: var(--secondary-color);
     transform: rotate(-45deg);
     border-radius: 50%;
     animation: pulse 1.5s infinite;
     box-shadow: 0 0 15px rgba(255, 107, 107, 0.5);
+    will-change: transform;
 }
 
 .heart:before,
@@ -92,7 +148,7 @@ body {
     position: absolute;
     width: 45px;
     height: 45px;
-    background-color: #ff6b6b;
+    background-color: var(--secondary-color);
     border-radius: 50%;
 }
 
@@ -107,19 +163,33 @@ body {
 }
 
 @keyframes pulse {
-    0% { transform: rotate(-45deg) scale(1); }
-    50% { transform: rotate(-45deg) scale(1.1); }
-    100% { transform: rotate(-45deg) scale(1); }
+    0% { transform: rotate(-45deg) scale(1); box-shadow: 0 0 15px rgba(255, 107, 107, 0.5); }
+    50% { transform: rotate(-45deg) scale(1.15); box-shadow: 0 0 25px rgba(255, 107, 107, 0.8); }
+    100% { transform: rotate(-45deg) scale(1); box-shadow: 0 0 15px rgba(255, 107, 107, 0.5); }
 }
 
+/* Typography */
 h1 {
     font-family: 'Playfair Display', serif;
-    color: #e91e63;
+    color: var(--primary-color);
     text-align: center;
     margin-bottom: 25px;
     font-size: 2.5rem;
     letter-spacing: 1.2px;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    animation: titleAppear 0.8s ease-out;
+    will-change: opacity, transform;
+}
+
+@keyframes titleAppear {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 p {
@@ -129,71 +199,343 @@ p {
     margin-bottom: 15px;
     text-align: center;
     font-weight: 300;
+    animation: contentAppear 0.8s ease-out;
+}
+
+.letter > p:nth-of-type(2) { animation-delay: 0.1s; }
+.letter > p:nth-of-type(3) { animation-delay: 0.2s; }
+.letter > p:nth-of-type(4) { animation-delay: 0.3s; }
+
+@keyframes contentAppear {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 p strong {
-    color: #d81b60;
+    color: var(--primary-color);
     font-weight: 600;
 }
 
+/* Button */
 .open-btn {
     display: block;
     margin: 25px auto 0;
-    padding: 12px 35px;
-    background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+    padding: 14px 40px;
+    background: linear-gradient(135deg, var(--secondary-color), #ff9999);
     border: none;
     border-radius: 50px;
     color: white;
     font-size: 1rem;
     cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 6px 18px rgba(245, 105, 145, 0.4);
-    font-weight: 500;
+    transition: all var(--transition-speed) cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: var(--shadow-md), 0 6px 20px rgba(255, 107, 107, 0.4);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    will-change: transform, box-shadow, filter;
+    position: relative;
+    overflow: hidden;
 }
 
-.open-btn:hover {
-    transform: scale(1.05);
-    box-shadow: 0 8px 25px rgba(245, 105, 145, 0.6);
+.open-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.open-btn:hover:not(:disabled) {
+    transform: scale(1.08) translateY(-3px);
+    box-shadow: var(--shadow-lg), 0 8px 30px rgba(255, 107, 107, 0.6);
+    filter: brightness(1.1);
+}
+
+.open-btn:hover:not(:disabled)::before {
+    left: 100%;
+}
+
+.open-btn:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 3px;
+}
+
+.open-btn:active:not(:disabled) {
+    transform: scale(0.97);
+}
+
+.open-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    box-shadow: var(--shadow-sm);
 }
 
 /* Modal */
 .modal {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.65);
-    backdrop-filter: blur(8px);
+    inset: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 1000;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.4s ease, visibility 0.4s;
 }
 
-.modal.active {
-    opacity: 1;
-    visibility: visible;
+.modal::backdrop {
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(8px);
+}
+
+.modal:not([open]) {
+    display: none;
+}
+
+.modal[open] {
+    animation: modalOpen 0.3s ease-out;
+}
+
+@keyframes modalOpen {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
 .modal-content {
-    background: white;
-    padding: 40px;
-    border-radius: 20px;
+    background: linear-gradient(135deg, #fff5f7 0%, #ffffff 100%);
+    padding: 45px 40px;
+    border-radius: var(--border-radius);
     max-width: 500px;
     text-align: center;
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
-    animation: modalAppear 0.5s ease-out forwards;
-    transform: scale(0.9);
+    box-shadow: var(--shadow-lg), 0 25px 80px rgba(233, 30, 99, 0.25);
+    animation: modalAppear 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    border: 2px solid rgba(233, 30, 99, 0.15);
+    will-change: transform, opacity;
+    backdrop-filter: blur(10px);
+}
+
+.modal-content h2 {
+    font-family: 'Playfair Display', serif;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    font-size: 2rem;
+    letter-spacing: 0.5px;
+    animation: slideInDown 0.6s ease-out 0.1s backwards;
+}
+
+.modal-content p {
+    margin-bottom: 30px;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    animation: slideInUp 0.6s ease-out 0.2s backwards !important;
+    font-weight: 400;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.close-btn,
+.replay-btn {
+    padding: 13px 28px;
+    border: none;
+    border-radius: 50px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all var(--transition-speed) cubic-bezier(0.34, 1.56, 0.64, 1);
+    font-weight: 600;
+    will-change: transform, box-shadow, filter;
+    animation: slideInUp 0.6s ease-out 0.3s backwards;
+    letter-spacing: 0.3px;
+}
+
+.close-btn {
+    background: linear-gradient(135deg, var(--light-pink), #f8c4ca);
+    color: white;
+    box-shadow: var(--shadow-md), 0 4px 15px rgba(245, 169, 175, 0.3);
+}
+
+.close-btn:hover:not(:disabled) {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: var(--shadow-lg), 0 8px 25px rgba(245, 169, 175, 0.5);
+    filter: brightness(1.08);
+}
+
+.close-btn:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+.close-btn:active:not(:disabled) {
+    transform: translateY(-1px) scale(0.98);
+}
+
+.replay-btn {
+    background: linear-gradient(135deg, var(--light-blue), var(--light-bg));
+    color: white;
+    box-shadow: var(--shadow-md), 0 4px 15px rgba(166, 193, 238, 0.3);
+}
+
+.replay-btn:hover:not(:disabled) {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: var(--shadow-lg), 0 8px 25px rgba(166, 193, 238, 0.5);
+    filter: brightness(1.08);
+}
+
+.replay-btn:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+.replay-btn:active:not(:disabled) {
+    transform: translateY(-1px) scale(0.98);
 }
 
 @keyframes modalAppear {
-    to { transform: scale(1); }
+    from {
+        transform: scale(0.85) rotateY(10deg);
+        opacity: 0;
+        filter: blur(5px);
+    }
+    to {
+        transform: scale(1) rotateY(0deg);
+        opacity: 1;
+        filter: blur(0px);
+    }
 }
 
-.hidden {
-    display: none;
+@keyframes slideInDown {
+    from {
+        transform: translateY(-30px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Responsivitas */
+@media (max-width: 768px) {
+    body {
+        height: auto;
+        min-height: 100vh;
+        padding: 20px 0;
+    }
+
+    .container {
+        padding: 20px;
+    }
+
+    .envelope {
+        padding: 30px;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    p {
+        font-size: 1rem;
+    }
+
+    .floating-hearts span {
+        font-size: 1.3rem;
+    }
+
+    .modal-content {
+        margin: 20px;
+        max-width: 90vw;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+
+    .envelope {
+        padding: 25px;
+        border-radius: 15px;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+    }
+
+    p {
+        font-size: 0.95rem;
+        line-height: 1.6;
+    }
+
+    .open-btn {
+        padding: 10px 25px;
+        font-size: 0.95rem;
+        margin-top: 20px;
+    }
+
+    .heart {
+        width: 35px;
+        height: 35px;
+    }
+
+    .heart:before,
+    .heart:after {
+        width: 35px;
+        height: 35px;
+    }
+
+    .heart:before {
+        top: -17px;
+    }
+
+    .heart:after {
+        left: 17px;
+    }
+
+    .modal-content {
+        padding: 30px 20px;
+    }
+
+    .modal-content h2 {
+        font-size: 1.5rem;
+    }
+
+    .modal-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .close-btn,
+    .replay-btn {
+        width: 100%;
+        padding: 10px 20px;
+    }
 }
