@@ -3,50 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Surat Cinta Valentine yang indah dan interaktif">
     <title>Surat Cinta untuk Si A - Valentine 2026 ❤️</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
 </head>
 <body>
-
     <!-- Background Animasi -->
-    <div class="floating-hearts">
-        <span style="--i:11;">❤️</span>
-        <span style="--i:12;">💖</span>
-        <span style="--i:24;">💕</span>
-        <span style="--i:10;">💗</span>
-        <span style="--i:14;">💞</span>
-        <span style="--i:23;">💓</span>
-        <span style="--i:18;">💝</span>
-        <span style="--i:16;">💘</span>
-        <span style="--i:19;">💟</span>
-        <span style="--i:20;">💖</span>
+    <div class="floating-hearts" aria-hidden="true">
+        <span style="--i:11; --delay:0s;">❤️</span>
+        <span style="--i:12; --delay:1s;">💖</span>
+        <span style="--i:24; --delay:2s;">💕</span>
+        <span style="--i:10; --delay:0.5s;">💗</span>
+        <span style="--i:14; --delay:1.5s;">💞</span>
+        <span style="--i:23; --delay:2.5s;">💓</span>
+        <span style="--i:18; --delay:0.8s;">💝</span>
+        <span style="--i:16; --delay:1.3s;">💘</span>
+        <span style="--i:19; --delay:2.1s;">💟</span>
+        <span style="--i:20; --delay:1.8s;">💖</span>
     </div>
 
-    <div class="container">
-        <div class="envelope" id="envelope">
-            <div class="heart"></div>
-            <div class="letter" id="letter">
-                <h1>Selamat Hari Valentine 2026 A 💖</h1>
+    <main class="container">
+        <article class="envelope" id="envelope">
+            <div class="heart" aria-hidden="true"></div>
+            <section class="letter" id="letter">
+                <h1>Selamat Hari Valentine 2026, A 💖</h1>
                 <p>Kepada kamu yang selalu hadir di hatiku,</p>
                 <p>Setiap detik bersamamu terasa begitu berharga. Kamu adalah cahaya di setiap hariku, dan aku tidak sabar menunggu hari valentine nanti untuk merayakan cinta kita bersama.</p>
                 <p>Semoga cinta kita abadi seperti bintang-bintang di langit malam.</p>
                 <p>Dengan segala cinta,<br><strong>Darimu</strong></p>
-                <button class="open-btn" id="openLetterBtn">Buka Surat Ini ✨</button>
-            </div>
-        </div>
-    </div>
+                <button class="open-btn" id="openLetterBtn" aria-label="Buka surat cinta">Buka Surat Ini ✨</button>
+            </section>
+        </article>
+    </main>
 
-    <div class="modal hidden">
+    <dialog class="modal" id="modal">
         <div class="modal-content">
             <h2>Surat Rahasia Untukmu 💌</h2>
             <p>Terima kasih telah menjadi bagian dari hidupku. Aku mencintaimu lebih dari yang bisa aku ungkapkan dengan kata-kata.</p>
-            <button class="close-btn">Tutup</button>
+            <div class="modal-actions">
+                <button class="close-btn" aria-label="Tutup modal">Tutup</button>
+                <button class="replay-btn" id="replayBtn" aria-label="Putar musik kembali">🎵 Putar Ulang</button>
+            </div>
         </div>
-    </div>
+    </dialog>
 
-    <!-- Audio Player (Tersembunyi) -->
-    <audio id="bgMusic" preload="auto">
+    <!-- Audio Player -->
+    <audio id="bgMusic" preload="metadata" aria-label="Musik latar Valentine">
         <source src="assets/audio/river_flows_in_you.mp3" type="audio/mpeg">
         Browser kamu tidak mendukung audio.
     </audio>
